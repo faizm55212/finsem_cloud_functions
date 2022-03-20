@@ -1,0 +1,86 @@
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+if (admin.apps.length === 0) {
+    admin.initializeApp();
+  }
+const db = admin.firestore();
+
+export const manageUser = functions.https.onCall((data,context) => {
+    if (context.app == undefined && !process.env.FUNCTIONS_EMULATOR) {
+        throw new functions.https.HttpsError(
+            'failed-precondition',
+            'The function must be called from an App Check verified app.')
+    }
+    if(!context.auth){
+        return {status : 'error' , code : 401, message : 'Not Signed In'};
+    }
+    return new Promise((resolve, reject)=>{
+            if(data.req == "add_user"){
+                admin.auth().createUser({
+                    displayName : data.name,
+                    email : data.email,
+                    emailVerified: false,
+                    password : data.passwd,
+                }).then((userRecord) => {
+                    db.collection('Users').doc(userRecord.uid).set({
+                        'name' : userRecord.displayName,
+                        'email' : userRecord.email,
+                        'address' : data.add,
+                        'total_pending' : 0,
+                    }).then((create)=>{
+                        db.collection('Users').doc(userRecord.uid).collection('add_req').doc(data.oid).set({
+                            "name" : data.org,
+                            "monthly" : data.monthly,
+                            "OID" : data.oid,
+                            "pending" : data.pending,  
+                        }).then((_)=>{
+                            resolve('Org '+ data.org+' Added to user request ' + userRecord.displayName);
+                        });
+                    });
+    
+                }).catch((error)=> {
+                    if (error.code == 'auth/email-already-exists'){
+                        admin.auth().getUserByEmail(data.email).then((userRecord)=>{  
+                            db.collection('Users').doc(userRecord.uid).collection('add_req').doc(data.oid).set({
+                                "name" : data.org,
+                                "monthly" : data.monthly,
+                                "OID" : data.oid,
+                                "pending" : data.pending,  
+                            }).then((_)=>{
+                                resolve('Org '+ data.org+' Added to user request ' + userRecord.displayName);
+                            });
+                        }).catch((error)=> {
+                            resolve('Error: '+ error);
+                        });  
+                    }
+                    else{
+                        resolve('Error: '+ error.code);
+                   }        
+                });  
+            }
+            else if(data.req == "delete_user"){
+                admin.auth().getUserByEmail(data.email).then((userRecords)=>{
+                    db.collection('Users').doc(userRecords.uid).get().then((userSnap)=>{
+                        const org_length = userSnap.data()!['org'].length;
+                        const org_list = userSnap.data()!['org'];
+                        let new_org_list = [];
+                        for(let i = 0;i<org_length;i++){
+                            if(org_list[i]['name']!=data.org){
+                                new_org_list.push(org_list[i]);
+                            }
+                        }
+                        userSnap.ref.update({
+                            org: new_org_list,
+                        });
+                        resolve('Org Deleted ' + data.org);
+                    });                
+                }).catch((error: string)=>{
+                    resolve("Error: "+ error);
+                });           
+            }
+            else {
+                functions.logger.info("No Operations perfomed", {structuredData: true});
+            }
+    });
+  });
+  

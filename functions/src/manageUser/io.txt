@@ -1,0 +1,39 @@
+input: 
+
+{
+  "req" : "create_user",
+  "name" : "Mohammad Faiz Khan",
+  "email" : "faizm5522@gmail.com",
+  "passwd" : "Faiz@123",
+  "org" : "finSem_uid",
+  "add" : "C/o Khan Comp Singrauli",
+  "monthly" : 100,
+  "pending" : 15
+}
+
+{
+  "req" : "add_user",
+  "name" : "Mohammad Faiz Khan",
+  "email" : "faizm5522@gmail.com",
+  "passwd" : "Faiz@123",
+  "add" : "C/o Khan Comp Singrauli",
+  "org" : "Calc",
+  "oid" : "OU7N0lCaWVxbYssLmM19",
+  "monthly" : 100,
+  "pending" : 15
+}
+
+{
+  "req" : "delete_user",
+  "email" : "faizm5522@gmail.com",
+  "org" : "FinSEM"
+}
+
+
+{
+  "req" : "update_user",
+  "email" : "faizm5522@gmail.com",
+  "org" : "finSem_uid",
+  //field to be updated
+  "g"
+}

@@ -1,0 +1,6 @@
+{
+  "name" : "FinSEM",
+  "email" : "finsem004@",
+  "passwd" : "Faiz@123",
+  "add" : "Singrauli"
+}
