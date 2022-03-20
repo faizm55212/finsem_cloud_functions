@@ -5,8 +5,7 @@ if (admin.apps.length === 0) {
     admin.initializeApp();
   }
 const db = admin.firestore();
-export const checkUserExists = functions.runWith({
-    // minInstances: envProjectId === "finsem-db" ? 5 : 0,
+export const checkUserExists = functions.region('asia-south1').runWith({
     maxInstances: 20,
     timeoutSeconds: 60,
     memory : "128MB"

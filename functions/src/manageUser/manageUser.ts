@@ -1,11 +1,16 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import 'firebase-functions';
 if (admin.apps.length === 0) {
     admin.initializeApp();
   }
 const db = admin.firestore();
 
-export const manageUser = functions.https.onCall((data,context) => {
+export const manageUser = functions.region('asia-south1').runWith({
+    maxInstances: 20,
+    timeoutSeconds: 60,
+    memory : "128MB"
+}).https.onCall((data,context) => {
     if (context.app == undefined && !process.env.FUNCTIONS_EMULATOR) {
         throw new functions.https.HttpsError(
             'failed-precondition',
