@@ -25,12 +25,21 @@ export const manageUser = functions.region('asia-south1').runWith({
                     displayName : data.name,
                     email : data.email,
                     emailVerified: false,
+                    phoneNumber: data.mobile,
                     password : data.passwd,
                 }).then((userRecord) => {
                     db.collection('Users').doc(userRecord.uid).set({
                         'name' : userRecord.displayName,
                         'email' : userRecord.email,
-                        'address' : data.add,
+                        'google' : false,
+                        'age': data.age,
+                        'gender': data.gender,
+                        'mobile': data.mobile,
+                        'block': data.block,
+                        'flatNo': data.flatNo,
+                        'idType': data.idType,
+                        'idNo': data.idNo,
+                        'occupation':data.occupation,
                         'total_pending' : 0,
                     }).then((create)=>{
                         db.collection('Users').doc(userRecord.uid).collection('add_req').doc(data.oid).set({

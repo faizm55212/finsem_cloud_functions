@@ -39,6 +39,9 @@ export const checkUserExists = functions.region('asia-south1').runWith({
             else{
                 db.collection('Users').doc(userRecord.uid).get().then(snap => {
                     if(snap.exists){
+                        if(snap.data()!['google'] == true){
+                            resolve("authCheck/Google-exists")
+                        }
                         resolve("User-exists");
                     }
                     else{
