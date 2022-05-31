@@ -25,7 +25,6 @@ export const manageUser = functions.region('asia-south1').runWith({
                     displayName : data.name,
                     email : data.email,
                     emailVerified: false,
-                    phoneNumber: data.mobile,
                     password : data.passwd,
                 }).then((userRecord) => {
                     db.collection('Users').doc(userRecord.uid).set({
@@ -64,11 +63,11 @@ export const manageUser = functions.region('asia-south1').runWith({
                                 resolve('Org '+ data.org+' Added to user request ' + userRecord.displayName);
                             });
                         }).catch((error)=> {
-                            resolve('Error: '+ error);
+                            throw new functions.https.HttpsError( error.code,error.message,error);
                         });  
                     }
                     else{
-                        resolve('Error: '+ error.code);
+                        throw new functions.https.HttpsError( error.code,error.message,error);
                    }        
                 });  
             }
@@ -88,8 +87,8 @@ export const manageUser = functions.region('asia-south1').runWith({
                         });
                         resolve('Org Deleted ' + data.org);
                     });                
-                }).catch((error: string)=>{
-                    resolve("Error: "+ error);
+                }).catch((error)=>{
+                    throw new functions.https.HttpsError( error.code,error.message,error);
                 });           
             }
             else {
