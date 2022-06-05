@@ -32,6 +32,7 @@ export const manageUser = functions.region('asia-south1').runWith({
                         'email' : userRecord.email,
                         'google' : false,
                         'age': data.age,
+                        'bio' : '',
                         'gender': data.gender,
                         'mobile': data.mobile,
                         'block': data.block,
