@@ -40,15 +40,11 @@ export const manageUser = functions.region('asia-south1').runWith({
                         'idNo': data.idNo,
                         'occupation':data.occupation,
                         'total_pending' : 0,
-                    }).then((create)=>{
-                        db.collection('Users').doc(userRecord.uid).collection('add_req').doc(data.oid).set({
+                        'org':{
                             "name" : data.org,
                             "monthly" : data.monthly,
                             "OID" : data.oid,
-                            "pending" : data.pending,  
-                        }).then((_)=>{
-                            resolve('Org '+ data.org+' Added to user request ' + userRecord.displayName);
-                        });
+                            "pending" : data.pending,  }
                     });
     
                 }).catch((error)=> {
