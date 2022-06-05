@@ -40,7 +40,7 @@ export const manageUser = functions.region('asia-south1').runWith({
                         'idType': data.idType,
                         'idNo': data.idNo,
                         'occupation':data.occupation,
-                        'total_pending' : 0,
+                        'total_pending' : data.pending,
                         'org':{
                             "name" : data.org,
                             "monthly" : data.monthly,
